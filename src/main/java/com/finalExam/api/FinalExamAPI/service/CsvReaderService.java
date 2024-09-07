@@ -81,8 +81,18 @@ public class CsvReaderService {
                 String[] values = line.split(",");
                 FootballMatch match = new FootballMatch();
                 match.setId(Long.parseLong(values[0].trim()));
-                match.setTeamA(teamRepository.findById(Long.parseLong(values[1].trim())).orElse(null));
-                match.setTeamB(teamRepository.findById(Long.parseLong(values[2].trim())).orElse(null));
+
+                Team teamA = teamRepository.findById(Long.parseLong(values[1].trim())).orElse(null);
+                Team teamB = teamRepository.findById(Long.parseLong(values[2].trim())).orElse(null);
+
+                if(teamA == null || teamB == null){
+                    System.err.println("One or both teams are missing for a match with ID: " + values[0]);
+                    continue;
+                }
+
+                match.setTeamA(teamA);
+                match.setTeamB(teamB);
+
                 match.setDate(LocalDate.parse(values[3].trim(), DateTimeFormatter.ofPattern("M/d/yyyy")));
                 match.setScore(values[4].trim());
                 footballMatchRepository.save(match);
