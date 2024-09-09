@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,7 +34,7 @@ public class CsvReaderService {
     private MatchRecordRepository matchRecordRepository;
 
     public void readPlayersFromScvFile(String filepath) throws IOException {
-        try(BufferedReader br = Files.newBufferedReader(Paths.get(filepath))){
+        try(BufferedReader br = new BufferedReader(new FileReader(filepath))){
             String line;
 
             while((line = br.readLine()) != null){
@@ -53,26 +54,36 @@ public class CsvReaderService {
     }
 
     public void readTeamsFromScvFile(String filepath) throws IOException {
-        try(BufferedReader br = Files.newBufferedReader(Paths.get(filepath))){
+        try(BufferedReader br = new BufferedReader(new FileReader(filepath))){
             String line;
 
             while((line = br.readLine()) != null){
+                System.out.println(line);
                 if(line.startsWith("ID")){
                     continue;
                 }
+
                 String[] values = line.split(",");
+
                 Team team = new Team();
                 team.setId(Long.parseLong(values[0].trim()));
                 team.setName(values[1].trim());
                 team.setManagerFullName(values[2].trim());
                 team.setGroup(values[3].trim());
-                teamRepository.save(team);
+
+                try{
+                    teamRepository.save(team);
+                }
+                catch(Exception e){
+                    System.err.println("Error saving team: " + e.getMessage());
+                }
+
             }
         }
     }
 
-    public void readMatchesFromCsv(String filePath) throws IOException {
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
+    public void readMatchesFromCsv(String filepath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
@@ -100,8 +111,8 @@ public class CsvReaderService {
         }
     }
 
-    public void readMatchRecordsFromCsv(String filePath) throws IOException {
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
+    public void readMatchRecordsFromCsv(String filepath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
