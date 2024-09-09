@@ -2,17 +2,26 @@ package com.finalExam.api.FinalExamAPI.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
+@Table(name = "teams")
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "Name")
     private String name;
 
+    @Column(name = "ManagerFullName")
     private String managerFullName;
 
+    @Column(name = "team_group")
     private String group;
+
+    @OneToMany(mappedBy = "team")
+    private List<Player> players;
 
     public Team() {
     }

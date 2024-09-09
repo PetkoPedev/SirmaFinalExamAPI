@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "matches")
 public class FootballMatch {
 
     @Id
@@ -12,11 +13,11 @@ public class FootballMatch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "teamA_id")
+    @JoinColumn(name = "ATeamID")
     private Team teamA;
 
     @ManyToOne
-    @JoinColumn(name = "teamB_id")
+    @JoinColumn(name = "BTeamID")
     private Team teamB;
 
     private LocalDate date;

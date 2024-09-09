@@ -3,19 +3,23 @@ package com.finalExam.api.FinalExamAPI.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "players")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "TeamNumber")
     private Integer teamNumber;
 
+    @Column(name = "Position")
     private String position;
 
+    @Column(name = "FullName")
     private String fullName;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "TeamID")
     private Team team;
 
     public Player(Long id, Integer teamNumber, String position, String fullName, Team team) {
