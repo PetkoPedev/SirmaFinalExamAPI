@@ -10,10 +10,12 @@ import com.finalExam.api.FinalExamAPI.repository.PlayerRepository;
 import com.finalExam.api.FinalExamAPI.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -30,9 +32,9 @@ public class CsvReaderService {
 
     @Autowired
     private MatchRecordRepository matchRecordRepository;
-    
-    public void readPlayersFromScvFile(String filepath) throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader(filepath))){
+
+    public void readPlayersFromScvFile(MultipartFile file) throws IOException {
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             String line;
 
             while((line = br.readLine()) != null){
@@ -51,8 +53,8 @@ public class CsvReaderService {
         }
     }
 
-    public void readTeamsFromScvFile(String filepath) throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader(filepath))){
+    public void readTeamsFromScvFile(MultipartFile file) throws IOException {
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             String line;
 
             while((line = br.readLine()) != null){
@@ -80,8 +82,8 @@ public class CsvReaderService {
         }
     }
 
-    public void readMatchesFromCsv(String filepath) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+    public void readMatchesFromCsv(MultipartFile file) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
@@ -109,8 +111,8 @@ public class CsvReaderService {
         }
     }
 
-    public void readMatchRecordsFromCsv(String filepath) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+    public void readMatchRecordsFromCsv(MultipartFile file) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
