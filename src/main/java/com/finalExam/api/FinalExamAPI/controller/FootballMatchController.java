@@ -48,7 +48,7 @@ public class FootballMatchController {
         }
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable Long id){
         try {
             footballMatchService.deleteById(id);

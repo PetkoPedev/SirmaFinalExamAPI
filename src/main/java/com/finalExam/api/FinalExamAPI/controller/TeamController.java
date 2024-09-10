@@ -48,7 +48,7 @@ public class TeamController {
         }
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id){
         try {
             teamService.deleteById(id);
