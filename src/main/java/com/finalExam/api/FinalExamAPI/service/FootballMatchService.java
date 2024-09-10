@@ -1,7 +1,6 @@
 package com.finalExam.api.FinalExamAPI.service;
 
 import com.finalExam.api.FinalExamAPI.model.FootballMatch;
-import com.finalExam.api.FinalExamAPI.model.MatchRecord;
 import com.finalExam.api.FinalExamAPI.repository.FootballMatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
