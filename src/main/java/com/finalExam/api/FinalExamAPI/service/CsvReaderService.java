@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -32,7 +30,7 @@ public class CsvReaderService {
 
     @Autowired
     private MatchRecordRepository matchRecordRepository;
-
+    
     public void readPlayersFromScvFile(String filepath) throws IOException {
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))){
             String line;
