@@ -31,7 +31,7 @@ public class PlayerController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Player> createPlayer(@ModelAttribute Player player){
         Player newPlayer = playerService.save(player);
         return ResponseEntity.ok(newPlayer);
