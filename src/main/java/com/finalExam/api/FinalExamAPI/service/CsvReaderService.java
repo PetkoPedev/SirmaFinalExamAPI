@@ -37,18 +37,38 @@ public class CsvReaderService {
         try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             String line;
 
+            if(br.markSupported()){
+                br.mark(1);
+                if(br.read() != '\ufeff'){
+                    br.reset();
+                }
+            }
+
             while((line = br.readLine()) != null){
                 if(line.startsWith("ID")){
                     continue;
                 }
                 String[] values = line.split(",");
-                Player player = new Player();
-                player.setId(Long.parseLong(values[0].trim()));
-                player.setTeamNumber(Integer.parseInt(values[1].trim()));
-                player.setPosition(values[2].trim());
-                player.setFullName(values[3].trim());
-                player.setTeam(teamRepository.findById(Long.parseLong(values[4].trim())).orElse(null));
-                playerRepository.save(player);
+                if (values.length < 5) {
+                    System.err.println("Skipping invalid line: " + line);
+                    continue;
+                }
+
+                try{
+                    Player player = new Player();
+                    player.setId(Long.parseLong(values[0].trim()));
+                    player.setTeamNumber(Integer.parseInt(values[1].trim()));
+                    player.setPosition(values[2].trim());
+                    player.setFullName(values[3].trim());
+                    player.setTeam(teamRepository.findById(Long.parseLong(values[4].trim())).orElse(null));
+                    playerRepository.save(player);
+                }catch (NumberFormatException e){
+                    System.err.println("Invalid number format in line " + line);
+                }
+                catch (Exception e) {
+                    System.err.println("Error processing line: " + line + " - " + e.getMessage());
+                }
+
             }
         }
     }
@@ -57,6 +77,13 @@ public class CsvReaderService {
         try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             String line;
 
+            if (br.markSupported()) {
+                br.mark(1);
+                if (br.read() != '\ufeff') {
+                    br.reset();
+                }
+            }
+
             while((line = br.readLine()) != null){
                 System.out.println(line);
                 if(line.startsWith("ID")){
@@ -64,14 +91,17 @@ public class CsvReaderService {
                 }
 
                 String[] values = line.split(",");
-
-                Team team = new Team();
-                team.setId(Long.parseLong(values[0].trim()));
-                team.setName(values[1].trim());
-                team.setManagerFullName(values[2].trim());
-                team.setGroup(values[3].trim());
+                if (values.length < 4) {
+                    System.err.println("Skipping invalid line: " + line);
+                    continue;
+                }
 
                 try{
+                    Team team = new Team();
+                    team.setId(Long.parseLong(values[0].trim()));
+                    team.setName(values[1].trim());
+                    team.setManagerFullName(values[2].trim());
+                    team.setGroup(values[3].trim());
                     teamRepository.save(team);
                 }
                 catch(Exception e){
@@ -85,11 +115,25 @@ public class CsvReaderService {
     public void readMatchesFromCsv(MultipartFile file) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
+
+            if (br.markSupported()) {
+                br.mark(1);
+                if (br.read() != '\ufeff') {
+                    br.reset();
+                }
+            }
+
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
                     continue;
                 }
                 String[] values = line.split(",");
+
+                if (values.length < 5) {
+                    System.err.println("Skipping invalid line: " + line);
+                    continue;
+                }
+
                 FootballMatch match = new FootballMatch();
                 match.setId(Long.parseLong(values[0].trim()));
 
@@ -114,18 +158,38 @@ public class CsvReaderService {
     public void readMatchRecordsFromCsv(MultipartFile file) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
+
+            if (br.markSupported()) {
+                br.mark(1);
+                if (br.read() != '\ufeff') {
+                    br.reset();
+                }
+            }
+
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("ID")) {
                     continue;
                 }
                 String[] values = line.split(",");
-                MatchRecord record = new MatchRecord();
-                record.setId(Long.parseLong(values[0].trim()));
-                record.setPlayer(playerRepository.findById(Long.parseLong(values[1].trim())).orElse(null));
-                record.setMatch(footballMatchRepository.findById(Long.parseLong(values[2].trim())).orElse(null));
-                record.setStartMinute(values[3].trim().equals("NULL") ? 0 : Integer.parseInt(values[3].trim()));
-                record.setEndMinute(values[4].trim().equals("NULL") ? 90 : Integer.parseInt(values[4].trim()));
-                matchRecordRepository.save(record);
+
+                if (values.length < 5) {
+                    System.err.println("Skipping invalid line: " + line);
+                    continue;
+                }
+
+                try{
+                    MatchRecord record = new MatchRecord();
+                    record.setId(Long.parseLong(values[0].trim()));
+                    record.setPlayer(playerRepository.findById(Long.parseLong(values[1].trim())).orElse(null));
+                    record.setMatch(footballMatchRepository.findById(Long.parseLong(values[2].trim())).orElse(null));
+                    record.setStartMinute(values[3].trim().equals("NULL") ? 0 : Integer.parseInt(values[3].trim()));
+                    record.setEndMinute(values[4].trim().equals("NULL") ? 90 : Integer.parseInt(values[4].trim()));
+                    matchRecordRepository.save(record);
+                }
+                catch (Exception e) {
+                    System.err.println("Error processing line: " + line + " - " + e.getMessage());
+                }
+
             }
         }
     }
